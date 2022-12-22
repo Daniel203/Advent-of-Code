@@ -94,7 +94,7 @@ fn process(path: &str, n_cicles: u64, part_2: bool) -> u64 {
                     monkeys[i].items[0],
                     monkeys[i].operation,
                     monkeys[i].operation_value,
-                ) ;
+                );
 
                 if part_2 {
                     worry_level = worry_level % modulo;
@@ -118,18 +118,17 @@ fn process(path: &str, n_cicles: u64, part_2: bool) -> u64 {
 
     counts.sort_by(|a, b| b.partial_cmp(a).unwrap());
 
-    return counts[0] * counts[1]; 
+    return counts[0] * counts[1];
 }
 
 fn part_one(path: &str) -> u64 {
-    return process(path ,  20, false);
+    return process(path, 20, false);
 }
 
 fn part_two(path: &str) -> u64 {
     return process(path, 10000, true);
 }
 
- 
 #[cfg(test)]
 mod tests {
     use super::*;
