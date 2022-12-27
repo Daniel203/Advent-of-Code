@@ -1,3 +1,4 @@
+use std::cmp;
 use std::fs;
 
 static TEST_INPUT: &str = "src/inputs/test_input.txt";
@@ -72,7 +73,7 @@ fn calculate_distances(sensors: &[Point], beacons: &[Point]) -> Vec<isize> {
     distances
 }
 
-fn process(sensors: &[Point], beacons: &[Point], target_row: isize) -> isize {
+fn process_part_one(sensors: &[Point], beacons: &[Point], target_row: isize) -> isize {
     let distances = calculate_distances(sensors, beacons);
 
     // positions on the target line where there is a beacon
@@ -112,16 +113,57 @@ fn process(sensors: &[Point], beacons: &[Point], target_row: isize) -> isize {
     out
 }
 
+fn process_part_two(sensors: &[Point], beacons: &[Point]) -> isize {
+    let distances = calculate_distances(sensors, beacons);
+
+    let mut pos_lines = Vec::new();
+    let mut neg_lines = Vec::new();
+
+    for (i, sensor) in sensors.iter().enumerate() {
+        let d = distances[i];
+        neg_lines.push(sensor.0 + sensor.1 - d);
+        neg_lines.push(sensor.0 + sensor.1 + d);
+        pos_lines.push(sensor.0 - sensor.1 - d);
+        pos_lines.push(sensor.0 - sensor.1 + d);
+    }
+
+    let mut pos = isize::MAX;
+    let mut neg = isize::MAX;
+
+    for i in 0..sensors.len() * 2 {
+        for j in i + 1..sensors.len() * 2 {
+            let a = pos_lines[i];
+            let b = pos_lines[j];
+
+            if isize::abs_diff(a, b) == 2 {
+                pos = cmp::min(a, b) + 1;
+            }
+
+            let a = neg_lines[i];
+            let b = neg_lines[j];
+
+            if isize::abs_diff(a, b) == 2 {
+                neg = cmp::min(a, b) + 1;
+            }
+        }
+    }
+
+    let x = ((pos + neg) / 2) as isize;
+    let y = ((neg - pos) / 2) as isize;
+
+    x * 4_000_000 + y
+}
+
 fn part_one(path: &str, target_row: isize) -> isize {
     let (sensors, beacons) = parse_input(path);
 
-    process(&sensors, &beacons, target_row)
+    process_part_one(&sensors, &beacons, target_row)
 }
 
-fn part_two(path: &str) -> usize {
+fn part_two(path: &str) -> isize {
     let (sensors, beacons) = parse_input(&path);
 
-    0
+    process_part_two(&sensors, &beacons)
 }
 
 #[cfg(test)]
@@ -135,6 +177,6 @@ mod tests {
 
     #[ignore]
     fn _test_part_two() {
-        assert_eq!(part_two(TEST_INPUT), 93);
+        assert_eq!(part_two(TEST_INPUT), 0);
     }
 }
