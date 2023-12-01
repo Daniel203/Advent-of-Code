@@ -46,7 +46,76 @@ fn part_one(path: &str) -> usize {
 
 fn part_two(path: &str) -> usize {
     let data: Vec<String> = parse_input(path);
-    return 0
+
+    let output: usize = data
+        .iter()
+        .map(|line| {
+            let mut num_1: u32 = 0;
+
+            (0..line.len()).for_each(|i| {
+                let reduced_string = line.get(i..line.len()).unwrap().to_string();
+                if num_1 == 0 {
+                    if reduced_string.chars().nth(0).unwrap().is_digit(10) {
+                        num_1 = reduced_string.chars().nth(0).unwrap().to_digit(10).unwrap();
+                    } else if reduced_string.starts_with("one") {
+                        num_1 = 1;
+                    } else if reduced_string.starts_with("two") {
+                        num_1 = 2;
+                    } else if reduced_string.starts_with("three") {
+                        num_1 = 3;
+                    } else if reduced_string.starts_with("four") {
+                        num_1 = 4;
+                    } else if reduced_string.starts_with("five") {
+                        num_1 = 5;
+                    } else if reduced_string.starts_with("six") {
+                        num_1 = 6;
+                    } else if reduced_string.starts_with("seven") {
+                        num_1 = 7;
+                    } else if reduced_string.starts_with("eight") {
+                        num_1 = 8;
+                    } else if reduced_string.starts_with("nine") {
+                        num_1 = 9;
+                    }
+                }
+            });
+
+            let mut num_2: u32 = 0;
+
+            (0..line.len()).rev().for_each(|i| {
+                let reduced_string = line.get(i..line.len()).unwrap().to_string();
+
+                if num_2 == 0 {
+                    if reduced_string.chars().nth(0).unwrap().is_digit(10) {
+                        num_2 = reduced_string.chars().nth(0).unwrap().to_digit(10).unwrap();
+                    } else if reduced_string.starts_with("one") {
+                        num_2 = 1;
+                    } else if reduced_string.starts_with("two") {
+                        num_2 = 2;
+                    } else if reduced_string.starts_with("three") {
+                        num_2 = 3;
+                    } else if reduced_string.starts_with("four") {
+                        num_2 = 4;
+                    } else if reduced_string.starts_with("five") {
+                        num_2 = 5;
+                    } else if reduced_string.starts_with("six") {
+                        num_2 = 6;
+                    } else if reduced_string.starts_with("seven") {
+                        num_2 = 7;
+                    } else if reduced_string.starts_with("eight") {
+                        num_2 = 8;
+                    } else if reduced_string.starts_with("nine") {
+                        num_2 = 9;
+                    }
+                }
+            });
+
+            return format!("{num_1}{num_2}")
+                .parse::<usize>()
+                .unwrap_or_default();
+        })
+        .sum();
+
+    return output;
 }
 
 #[cfg(test)]
