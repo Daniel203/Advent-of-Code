@@ -1,5 +1,5 @@
-use std::{collections::HashMap, fs};
 use num::integer::lcm;
+use std::{collections::HashMap, fs};
 
 static INPUT_DATA: &str = "src/inputs/input.txt";
 type InputType = (String, HashMap<String, Vec<String>>);
@@ -22,7 +22,6 @@ fn parse_input(path: &str) -> InputType {
     let instructions = &split[0];
 
     let mut netwok = HashMap::new();
-    let mut start_key = "".to_string();
 
     split[1].split("\n").for_each(|x| {
         if x.is_empty() {
@@ -46,22 +45,16 @@ fn parse_input(path: &str) -> InputType {
     return (instructions.clone(), netwok);
 }
 
-fn part_one(path: &str) -> usize {
-    let (instructions, network) = parse_input(path);
-
-    let mut key = "AAA".to_string();
+fn count_n_steps(key: String, data: &InputType) -> usize {
+    let (instructions, network) = data;
+    let mut key = key;
     let mut i = 0;
     let mut count = 0;
 
-    while key != "ZZZ" {
+    while !key.ends_with("Z") {
         let direction = &instructions.chars().nth(i).unwrap();
         let direction_index = if *direction == 'L' { 0 } else { 1 };
-
-        if i + 1 < instructions.len() {
-            i += 1;
-        } else {
-            i = 0;
-        }
+        i = if i + 1 < instructions.len() { i + 1 } else { 0 };
 
         key = network.get(&key).unwrap()[direction_index].clone();
         count += 1;
@@ -70,44 +63,26 @@ fn part_one(path: &str) -> usize {
     return count;
 }
 
+fn part_one(path: &str) -> usize {
+    let data = parse_input(path);
+    return count_n_steps("AAA".to_string(), &data);
+}
+
 fn part_two(path: &str) -> usize {
     let (instructions, network) = parse_input(path);
 
-    let keys = network
+    let counts = network
         .keys()
         .filter(|x| x.chars().last() == Some('A'))
-        .collect::<Vec<&String>>();
-
-    let mut counts = vec![];
-
-    for x in keys {
-        let mut key = x.clone();
-        let mut i = 0;
-        let mut count = 0;
-
-        while !key.ends_with("Z"){
-            let direction = &instructions.chars().nth(i).unwrap();
-            let direction_index = if *direction == 'L' { 0 } else { 1 };
-
-            if i + 1 < instructions.len() {
-                i += 1;
-            } else {
-                i = 0;
-            }
-
-            key = network.get(&key).unwrap()[direction_index].clone();
-            count += 1;
-        }
-
-        counts.push(count);
-    }
+        .map(|key| count_n_steps(key.clone(), &(instructions.clone(), network.clone())))
+        .collect::<Vec<usize>>();
 
     let mut result = counts[0];
     counts.iter().for_each(|x| {
         result = lcm(result, *x);
     });
 
-    return result;
+    return counts.iter().fold(counts[0], |acc, x| lcm(acc, *x));
 }
 
 #[cfg(test)]
