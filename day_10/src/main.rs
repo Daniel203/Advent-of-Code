@@ -17,11 +17,13 @@ fn main() {
 
 fn parse_input(path: &str) -> Board {
     let input = fs::read_to_string(path).expect("Error while reading the file!");
+
     let parsed_input = input
         .split("\n")
         .filter(|x| !x.is_empty())
         .map(|x| x.chars().collect())
         .collect();
+
     return parsed_input;
 }
 
