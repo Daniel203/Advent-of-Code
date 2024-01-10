@@ -98,9 +98,41 @@ fn part_one(path: &str) -> usize {
 }
 
 fn part_two(path: &str) -> usize {
-    let data = parse_input(path);
+    let (workflows, _) = parse_input(path);
 
-    return 0;
+    let mut res = 0;
+    let mut available = vec![("in", [(1, 4001); 4])];
+
+    while let Some((workflow, mut xmas)) = available.pop() {
+        for (category, is_greater, value, next) in &workflows[workflow] {
+            let (range_min, range_max) = xmas[*category];
+
+            let value = Ord::clamp(value + *is_greater as usize, range_min, range_max);
+
+            let (sat, unsat) = match is_greater {
+                true => ((value, range_max), (range_min, value)),
+                false => ((range_min, value), (value, range_max)),
+            };
+
+            if sat.0 < sat.1 {
+                xmas[*category] = sat;
+
+                match next.as_str() {
+                    "A" => res += xmas.iter().map(|(min, max)| max - min).product::<usize>(),
+                    "R" => {}
+                    _ => available.push((next, xmas)),
+                }
+            }
+
+            if unsat.0 >= unsat.1 {
+                break;
+            }
+
+            xmas[*category] = unsat;
+        }
+    }
+
+    return res;
 }
 
 #[cfg(test)]
