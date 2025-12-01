@@ -14,19 +14,19 @@ fn main() {
 fn parse_input(path: &str) -> InputType {
     let input = fs::read_to_string(path).expect("Error while reading the file!");
     let parsed_input = input.split("\n").map(|x| x.to_string()).collect();
-    return parsed_input;
+    parsed_input
 }
 
 fn part_one(path: &str) -> usize {
     let data = parse_input(path);
 
-    return 0;
+    0
 }
 
 fn part_two(path: &str) -> usize {
     let data = parse_input(path);
 
-    return 0;
+    0
 }
 
 #[cfg(test)]
