@@ -1,4 +1,4 @@
-# AOC 2023 
+# AOC 2025
 
 ## How to generate a new day
 First install cargo-generate
