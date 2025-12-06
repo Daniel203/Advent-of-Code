@@ -13,7 +13,11 @@ fn main() {
 
 fn parse_input(path: &str) -> InputType {
     let input = fs::read_to_string(path).expect("Error while reading the file!");
-    let parsed_input = input.split("\n").map(|x| x.to_string()).collect();
+    let parsed_input = input
+        .split("\n")
+        .filter(|&x| !x.is_empty())
+        .map(|x| x.to_string())
+        .collect();
     parsed_input
 }
 
